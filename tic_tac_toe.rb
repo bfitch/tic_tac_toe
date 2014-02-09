@@ -1,19 +1,29 @@
 require 'observer'
+require 'forwardable'
+require 'set'
 require 'pp'
 
-class TicTacToe
+class TicTacToe #Controller for now
   def initialize
-    screen = Screen.new self
-    screen.draw "Tic Tac Toe"
-    screen.read
+    @screen = Screen.new self
+    @screen.draw "Tic Tac Toe"
+    @screen.read
   end
 
   def update(coordinate, value)
+    board      = Board.new(cells)
+
     coordinate = Coordinate.new *coordinate.scan(/\w/)
     cell       = Cell.new(coordinate, value)
-    board      = Board.new.set(cell)
-    pp board
-    # screen.draw View.set board
+
+    board.set(cell)
+    @screen.draw View.new(board).render
+  end
+
+  private
+
+  def cells
+    Cells.new
   end
 end
 
@@ -38,62 +48,22 @@ class Screen
   end
 end
 
-#|----|----|----|
-#|    |    |    |
-#|----|----|----|
-#|    |    |    |
-#|----|----|----|
-#|    |    |    |
-#|----|----|----|
-
-class Board
-  include Enumerable
-
-  PAIRS = [ '0c', '1c', '2c',
-            '0b', '1b', '2b',
-            '0a', '1a', '2a' ]
-
-  def set(cell)
-    build
-    @board << cell if @board.delete(cell)
+class View
+  def initialize(board)
+    @board = board
   end
 
-  def build
-    @board = coordinates.each_with_object([]) do |coordinate, acc|
-      acc << Cell.new(coordinate, false)
-    end
-  end
-
-  def each
-    build.each { |cell| yield cell }
-  end
-
-  private
-
-  def coordinates
-    PAIRS.map { |coordinate| Coordinate.new(*coordinate.scan(/\w/)) }
-  end
-end
-
-
-class Cell
-  attr_reader :coordinate
-
-  def initialize(coordinate, value)
-    @coordinate = coordinate
-    @value      = to_boolean(value)
-  end
-
-  def to_boolean(value)
-    if value == "x"
-      return true
-    else
-      return false
-    end
-  end
-
-  def <=>(object)
-    coordinate <=> object.coordinate
+  def render
+    <<-BOARD
+          a    b    c
+        |----|----|----|
+      0 |    |    |    |
+        |----|----|----|
+      1 |    |    |    |
+        |----|----|----|
+      2 |    |    |    |
+        |----|----|----|
+    BOARD
   end
 end
 
@@ -107,26 +77,96 @@ class Coordinate
   end
 
   def <=>(object)
-    if (x == object.x) && (y == object.y)
-      0
-    elsif (x >= object.x) && (y >= object.y)
-      1
-    else
+    if value < object.value
       -1
+    elsif value == object.value
+      0
+    elsif value > object.value
+      1
     end
   end
 
-    # if (x > object.x) && (y > object.y)
-    #   1
-    # elsif (x > object.x) && (y >= object.y)
-    #   1
-    # elsif (x >= object.x) && (y > object.y)
-    #   1
-    # elsif (x == object.x) && (y == object.y)
-    #   0
-    # else
-    #   -1
-    # end
+  def value
+    (@y + @x).hex
+  end
 end
+
+class Cell
+  attr_reader :coordinate
+
+  def initialize(coordinate, value)
+    @coordinate = coordinate
+    @value      = to_boolean(value) #handle this better
+  end
+
+  def to_boolean(value)
+    if value == "x"
+      return true
+    else
+      return false
+    end
+  end
+
+  def <=>(object)
+    coordinate <=> object.coordinate
+  end
+
+  def ==(object)
+    coordinate == object.coordinate
+  end
+end
+
+class Cells
+  extend Forwardable
+
+  PAIRS = %w{ a0 b0 c0
+              a1 b1 c1
+              a2 b2 c2 }
+
+  def_delegators :@models, :each, :<<, :delete
+
+  attr_reader :cell, :coordinate
+
+  def initialize(cell = Cell, coordinate = Coordinate)
+    @cell       = cell
+    @coordinate = coordinate
+    build
+  end
+
+  def build
+    @models = coordinates.each_with_object([]) do |coordinate, acc|
+      acc << cell.new(coordinate, false)
+    end
+  end
+
+  private
+
+  def coordinates
+    PAIRS.map { |pair| coordinate.new(*pair.scan(/\w/)) }
+  end
+end
+
+class Board
+  include Enumerable
+
+  def initialize(cells)
+    @cells = cells
+  end
+
+  def set(cell)
+    cells << cell if cells.delete(cell)
+  end
+
+  def each
+    cells.each { |cell| yield cell }
+  end
+
+  private
+
+  def cells
+    @cells
+  end
+end
+
 
 TicTacToe.new
