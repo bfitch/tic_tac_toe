@@ -16,7 +16,7 @@ class Controller
 
     board.set(cell)
 
-    # TicTacToe.next_turn
+    # TicTacToe.next_turn unless game_state.victory?
     
     screen.draw #View.new(board).render
     #replace with ViewBuilder(game_state)
@@ -70,15 +70,15 @@ class Rulebook
   end
 
   def winning_column?
-    board.each_column { |column| matching?(column) }
+    board.columns.select { |column| matching?(column) }.any?
   end
 
   def winning_row?
-    !board.rows.select { |row| matching?(row) }.empty?
+    board.rows.select { |row| matching?(row) }.any?
   end
 
   def winning_diagonal?
-    board.each_diagonal { |diagonal| matching?(diagonal) }
+    board.diagonals { |diagonal| matching?(diagonal) }.any?
   end
 
   private

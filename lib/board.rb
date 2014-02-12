@@ -1,5 +1,8 @@
 class Board
   include Enumerable
+  extend Forwardable
+
+  def_delegators :@cells, :rows, :columns, :diagonals
 
   def initialize(cells)
     @cells = cells
@@ -11,22 +14,6 @@ class Board
 
   def each
     cells.each { |cell| yield cell }
-  end
-
-  def rows
-    Cells::ROWS.map do |number|
-      cells.select { |cell| cell.row == number }
-    end
-  end
-
-  def each_column
-    Cells::COLUMNS.each do |char|
-      yield cells.select { |cell| cell.column == char }
-    end
-  end
-
-  def each_diagonal
-    cells.diagonals.each { |diagonal| yield diagonal }
   end
 
   private
