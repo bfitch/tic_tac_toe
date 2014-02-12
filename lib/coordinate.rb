@@ -1,10 +1,10 @@
 class Coordinate
   include Comparable
 
-  attr_reader :x, :y
+  attr_reader :column, :row
 
-  def initialize(x,y)
-    @x, @y = x,y
+  def initialize(column,row)
+    @column, @row = column,row
   end
 
   def <=>(object)
@@ -18,6 +18,10 @@ class Coordinate
   end
 
   def value
-    (@y + @x).hex
+    (@row + @column).hex
+  end
+
+  def hash
+    [@column, @row].hash
   end
 end

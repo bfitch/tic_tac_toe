@@ -1,21 +1,21 @@
 class Cell
+  extend Forwardable
+
+  def_delegators :@coordinate, :column, :row, :hash
+
   attr_reader :coordinate
 
-  def initialize(coordinate, value)
+  def initialize(coordinate, owner)
     @coordinate = coordinate
-    @value      = to_boolean(value) #handle this better
+    @owner      = owner
   end
 
-  def to_boolean(value)
-    if value == "x"
-      return true
-    else
-      return false
-    end
+  def player_one?
+    @owner == TicTacToe::PLAYER_ONE
   end
 
-  def token
-    
+  def player_two?
+    @owner == TicTacToe::PLAYER_TWO
   end
 
   def <=>(object)
@@ -25,4 +25,5 @@ class Cell
   def ==(object)
     coordinate == object.coordinate
   end
+  alias_method :eql?, :==
 end
