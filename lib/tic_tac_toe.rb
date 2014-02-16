@@ -1,6 +1,7 @@
 require 'observer'
 require 'forwardable'
 require 'set'
+require 'erb'
 require 'pp'
 
 require_relative 'board'
@@ -10,6 +11,7 @@ require_relative 'controller'
 require_relative 'coordinate'
 require_relative 'screen'
 require_relative 'view'
+require_relative 'view_factory'
 
 class TicTacToe
   PLAYER_ONE = :P1

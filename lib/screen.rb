@@ -7,9 +7,9 @@ class Screen
    
   def read
     loop do
-      coordinate, value = gets.split(' ')
+      coordinate = gets.chomp
       changed 
-      notify_observers(coordinate, value.chomp)
+      notify_observers(coordinate)
     end
     sleep 1
   end

@@ -1,11 +1,10 @@
 class Controller
   def initialize
-    screen.draw "Tic Tac Toe"
-    screen.draw "Player 1:"
+    screen.draw view.render
     screen.read
   end
 
-  def update(coordinate, value)
+  def update(coordinate)
     #add Adapter here to convert screen input to expected args
 
     coordinate = Coordinate.new *coordinate.scan(/\w/) # only vaildate Coordinate
@@ -16,14 +15,16 @@ class Controller
 
     board.set(cell)
 
-    # TicTacToe.next_turn unless game_state.victory?
+    TicTacToe.next_turn unless game_state.victory?
     
-    screen.draw #View.new(board).render
-    #replace with ViewBuilder(game_state)
-    # builder decides which view to render based on the game state
+    screen.draw view.render
   end
 
   private
+
+  def view
+    ViewFactory.new(game_state, board).get_view
+  end
 
   def screen
     @screen ||= Screen.new(self)
@@ -37,8 +38,16 @@ class Controller
     @board ||= Board.new(cells)
   end
 
+  def rulebook
+    Rulebook.new(board)
+  end
+
+  def game_state
+    GameState.new(rulebook)
+  end
+
   def current_player
-    TicTacToe.current_player
+    game_state.current_player
   end
 end
 

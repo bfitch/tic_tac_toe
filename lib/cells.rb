@@ -7,7 +7,7 @@ class Cells
                 a1 b1 c1
                 a2 b2 c2 }
 
-  def_delegators :@models, :each, :<<, :delete, :select
+  def_delegators :@models, :each, :<<, :delete, :select, :[]
 
   attr_reader :cell, :coordinate, :models
 

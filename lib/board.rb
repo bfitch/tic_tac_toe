@@ -2,7 +2,7 @@ class Board
   include Enumerable
   extend Forwardable
 
-  def_delegators :@cells, :rows, :columns, :diagonals
+  def_delegators :@cells, :rows, :columns, :diagonals, :[]
 
   def initialize(cells)
     @cells = cells
@@ -15,6 +15,14 @@ class Board
   def each
     cells.each { |cell| yield cell }
   end
+
+  def get_binding
+    binding()
+  end
+  
+  # def each_row
+  #   cells.rows.each { |row| yield row }
+  # end
 
   private
 

@@ -10,6 +10,10 @@ class Cell
     @owner      = owner
   end
 
+  def to_s
+    @owner
+  end
+
   def player_one?
     @owner == TicTacToe::PLAYER_ONE
   end
