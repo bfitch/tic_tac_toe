@@ -1,25 +1,19 @@
 class ViewFactory
-  def initialize(game_state, board)
-    @game_state = game_state
-    @board      = board
+  def initialize(rulebook)
+    @rulebook = rulebook
   end
 
   def get_view
-    # if game_state.victory?
-    #   VictoryView.new(board)
+    # if rulebook.victory?
+    #   VictoryView.new(rulebook.board)
     # else
-    View.new(board)
+    BoardView.new(rulebook.board)
     # end
   end
 
   private
 
-  def game_state
-    @game_state
-  end
-
-  def board
-    @board
-    # Adapter.new(@board)
+  def rulebook
+    @rulebook
   end
 end

@@ -16,13 +16,9 @@ class Board
     cells.each { |cell| yield cell }
   end
 
-  def get_binding
-    binding()
+  def each_row_with_index
+    cells.rows.each_with_index { |row,i| yield(row, i) }
   end
-  
-  # def each_row
-  #   cells.rows.each { |row| yield row }
-  # end
 
   private
 

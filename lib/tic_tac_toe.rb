@@ -12,10 +12,11 @@ require_relative 'coordinate'
 require_relative 'screen'
 require_relative 'view'
 require_relative 'view_factory'
+require_relative 'rulebook'
 
 class TicTacToe
-  PLAYER_ONE = :P1
-  PLAYER_TWO = :P2
+  PLAYER_ONE = 'P1'.freeze
+  PLAYER_TWO = 'P2'.freeze
 
   @turn = 0
 

@@ -10,8 +10,12 @@ class Cell
     @owner      = owner
   end
 
-  def to_s
-    @owner
+  def owner
+    if @owner.nil?
+      "           "
+    else
+      "     #{@owner}    "
+    end
   end
 
   def player_one?

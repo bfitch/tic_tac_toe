@@ -9,7 +9,7 @@ class Cells
 
   def_delegators :@models, :each, :<<, :delete, :select, :[]
 
-  attr_reader :cell, :coordinate, :models
+  attr_reader :cell, :coordinate
 
   def initialize(cell = Cell, coordinate = Coordinate)
     @cell       = cell
@@ -18,14 +18,14 @@ class Cells
   end
 
   def build
-    @models = coordinates.each_with_object(SortedSet.new) do |coordinate, acc|
+    @models = coordinates.each_with_object([]) do |coordinate, acc|
       acc << cell.new(coordinate, nil)
     end
   end
 
   def rows
     ROWS.map do |number|
-      @models.select { |cell| cell.row == number }
+      @models.select { |cell| cell.row == number }.sort
     end
   end
 
@@ -40,7 +40,7 @@ class Cells
     diagonal_2 = COLUMNS.reverse.zip('0'..'2')
 
     [diagonal_1, diagonal_2].map do |diagonal|
-      (@models & diagonal.map { |pair| Cell.new(Coordinate.new(*pair),nil) }).to_a
+      (@models.to_set & diagonal.map { |pair| Cell.new(Coordinate.new(*pair),nil) }).to_a
     end
   end
 
