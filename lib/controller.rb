@@ -5,17 +5,12 @@ class Controller
   end
 
   def update(coordinate)
-    #add Adapter here to convert screen input to expected args
-
     coordinate = Coordinate.new *coordinate.scan(/\w/) # only vaildate Coordinate
     cell       = Cell.new(coordinate, current_player)
 
-    # if input valid - Validation mixin or something?
-    #
-
     board.set(cell)
-
-    TicTacToe.next_turn #unless game_state.victory?
+    
+    TicTacToe.next_turn unless rulebook.victory?
     
     screen.draw view.render
   end
@@ -23,7 +18,7 @@ class Controller
   private
 
   def view
-    ViewFactory.new(rulebook).get_view
+    ViewBuilder.new(rulebook)
   end
 
   def screen

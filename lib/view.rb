@@ -5,7 +5,6 @@ class BoardView
 
   def render
     header + rows + footer
-    PlayerView.render
   end
 
   private
@@ -42,7 +41,7 @@ class BoardView
 end
 
 class PlayerView
-  def self.render
+  def render
     if TicTacToe.current_player == 'P1'
       'PLAYER 1: '
     else
@@ -57,6 +56,6 @@ class VictoryView
   end
 
   def render
-    "YA WON!"
+    "WINNER! #{PlayerView.new.render} WINS!"
   end
 end

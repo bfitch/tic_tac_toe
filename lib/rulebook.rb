@@ -21,7 +21,7 @@ class Rulebook
   end
 
   def winning_diagonal?
-    board.diagonals { |diagonal| matching?(diagonal) }.any?
+    board.diagonals.select { |diagonal| matching?(diagonal) }.any?
   end
 
   private
